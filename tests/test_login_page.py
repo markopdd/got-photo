@@ -11,12 +11,17 @@ import test_data.data as td
 
 def test_login_page_smoke(browser):
     """Test login page url is open and showing h1 "Welcome" tittle
-    as default for English US website version"
+    as default for English US website version" Check the cart is empty. Open Menu.
     """
     login_main_page = LoginPage(browser, td.URL)
     login_main_page.go_to_site()
     assert login_main_page.find_text_element('//h1', td.TITTLES[0]), \
         logging.error(f'Can\'t open url {td.URL} or no {td.TITTLES[0]} tittle found')
+    login_main_page.find_and_click(login_main_page.CART)
+    assert login_main_page.find_text_element(login_main_page.CART_MESSAGE, 'Your cart is empty.'), \
+        logging.error(f'Cart is not empty')
+    assert login_main_page.open_menu(), \
+        logging.error(f'Can\'t open menu')
 
 
 def test_login_e2e(browser):
@@ -87,11 +92,31 @@ def test_login_page_language_tittles(browser):
     # Check Français tittle
     login_main_page.find_and_click(login_main_page.SELECT_LANGUAGE)
     login_main_page.select_text_option(login_main_page.SELECT_LANGUAGE, td.LANGUAGES[1])
+    login_main_page.driver.refresh()
     assert login_main_page.find_text_element('//h1', td.TITTLES[1]), \
         logging.error(f'Tittle is not relevant {td.LANGUAGES[1]} --> {td.TITTLES[1]}')
 
     # Check Español tittle
     login_main_page.find_and_click(login_main_page.SELECT_LANGUAGE)
     login_main_page.select_text_option(login_main_page.SELECT_LANGUAGE, td.LANGUAGES[2])
+    login_main_page.driver.refresh()
     assert login_main_page.find_text_element('//h1', td.TITTLES[2]), \
         logging.error(f'Tittle is not relevant {td.LANGUAGES[2]} --> {td.TITTLES[2]}')
+
+    # Switch back to English version
+    login_main_page.find_and_click(login_main_page.SELECT_LANGUAGE)
+    login_main_page.select_text_option(login_main_page.SELECT_LANGUAGE, td.LANGUAGES[0])
+    login_main_page.driver.refresh()
+    assert login_main_page.find_text_element('//h1', td.TITTLES[0]), \
+        logging.error(f'Tittle is not relevant {td.LANGUAGES[0]} --> {td.TITTLES[0]}')
+
+
+def test_login_incorrect_code(browser):
+    """Test check the incorrect code """
+    login_main_page = LoginPage(browser, td.URL)
+    login_main_page.go_to_site()
+    login_main_page.find_text_element('//h1', td.TITTLES[0])
+    login_main_page.send_data(login_main_page.CODE_FIELD, "1234")
+    login_main_page.find_and_click(login_main_page.LOGIN_BUTTON)
+    assert login_main_page.find_text_element(login_main_page.WRONG_CODE_MESSAGE, 'Code not found'), \
+        logging.error(f'No error message if the code is incorrect')

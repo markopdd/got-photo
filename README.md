@@ -9,7 +9,7 @@ Install python environment from console command:
 `python -m venv venv`
 
 Install dependencies: 
-`python install -r requirements.txt`
+`pip install -r requirements.txt`
 
 Open test_data/data.py and fill USER_TEST_DATA dict example ('firstname': "TestJohn")
 

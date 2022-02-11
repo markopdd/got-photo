@@ -8,6 +8,7 @@ class BasePage:
     """Define base locators constants"""
     MENU_BURGER = '//*[@aria-label="menu"]'
     CART = '//*[@aria-label="shopping-cart"]'
+    CART_MESSAGE = '//*[@class="ant-popover-title"]'
     HELLO = '//h2[contains(text(), "Hello")]'
     LOGIN_BUTTON = '//*[text()="Login"]'
     LOGOUT_BUTTON = '//*[contains(text(), "Log out")]'
@@ -31,7 +32,7 @@ class BasePage:
 
     def open_menu(self):
         self.find_and_click(BasePage.MENU_BURGER)
-        self.find_text_element(BasePage.HELLO, "Hello")
+        return self.find_text_element(BasePage.HELLO, "Hello")
 
     """Explicit wait methods"""
     def find_element(self, xpath: str, time: int = 10) -> object:
@@ -46,5 +47,5 @@ class BasePage:
         return WebDriverWait(self.driver, time).until(ec.text_to_be_present_in_element((By.XPATH, xpath), text),
                                                       message=f"Can't find element by locator {xpath}")
 
-    def select_text_option(self,locator: any, text: str) -> object:
+    def select_text_option(self, locator: any, text: str) -> object:
         return Select(self.find_element(locator)).select_by_visible_text(text)
