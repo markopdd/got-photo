@@ -79,7 +79,7 @@ def test_login_e2e(browser):
     event_page.find_and_click(event_page.LOGOUT_BUTTON)
 
 
-def test_login_page_language_tittles(browser):
+def test_login_page_language_tittles(browser, check_language):
     """Test login page showing correct h1 "Welcome"tittle relevant to chosen language
     """
     login_main_page = LoginPage(browser, td.URL)
@@ -90,24 +90,15 @@ def test_login_page_language_tittles(browser):
         logging.error(f'Tittle is not relevant {td.LANGUAGES[0]} --> {td.TITTLES[0]}')
 
     # Check Français tittle
-    login_main_page.find_and_click(login_main_page.SELECT_LANGUAGE)
-    login_main_page.select_text_option(login_main_page.SELECT_LANGUAGE, td.LANGUAGES[1])
-    login_main_page.driver.refresh()
-    assert login_main_page.find_text_element('//h1', td.TITTLES[1]), \
+    assert check_language(login_main_page, login_main_page.SELECT_LANGUAGE, td.LANGUAGES[1], '//h1', td.TITTLES[1]), \
         logging.error(f'Tittle is not relevant {td.LANGUAGES[1]} --> {td.TITTLES[1]}')
 
     # Check Español tittle
-    login_main_page.find_and_click(login_main_page.SELECT_LANGUAGE)
-    login_main_page.select_text_option(login_main_page.SELECT_LANGUAGE, td.LANGUAGES[2])
-    login_main_page.driver.refresh()
-    assert login_main_page.find_text_element('//h1', td.TITTLES[2]), \
+    assert check_language(login_main_page, login_main_page.SELECT_LANGUAGE, td.LANGUAGES[2], '//h1', td.TITTLES[2]), \
         logging.error(f'Tittle is not relevant {td.LANGUAGES[2]} --> {td.TITTLES[2]}')
 
     # Switch back to English version
-    login_main_page.find_and_click(login_main_page.SELECT_LANGUAGE)
-    login_main_page.select_text_option(login_main_page.SELECT_LANGUAGE, td.LANGUAGES[0])
-    login_main_page.driver.refresh()
-    assert login_main_page.find_text_element('//h1', td.TITTLES[0]), \
+    assert check_language(login_main_page, login_main_page.SELECT_LANGUAGE, td.LANGUAGES[0], '//h1', td.TITTLES[0]), \
         logging.error(f'Tittle is not relevant {td.LANGUAGES[0]} --> {td.TITTLES[0]}')
 
 
